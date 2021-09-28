@@ -21,7 +21,36 @@ function calcularTotal(cantidad, precio, estado) {
             }
         }
     }
+    if (cantidad * precio * (1 + impuesto) < 0) {
+        cantidad = 0;
+        precio = 0;
+        impuesto = 0;
+    }
     return cantidad * precio * (1 + impuesto)
+}
+
+function verificarEstado(estado) {
+    if (estado == "UT") {
+        return true;
+    } else {
+        if (estado == "NV") {
+            return true;
+        } else {
+            if (estado == "TX") {
+                return true;
+            } else {
+                if (estado == "AL") {
+                    return true;
+                } else {
+                    if (estado == "CA") {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }
+        }
+    }
 }
 
 describe("Resultado debe ser exacto", () => {
@@ -44,5 +73,26 @@ describe("Resultado debe ser exacto", () => {
     it("deberia ser exacto", () => {
         //expect(cantidad.value >= 0);
         expect(calcularTotal(5, 5, 'CA')).toEqual(27.0625);
+    });
+});
+
+describe("No debe haber cantidades negativos", () => {
+    it("No hay cantidades negativas", () => {
+        expect(calcularTotal(-20, 20, 'UT')).toEqual(0);
+    });
+});
+
+describe("No debe haber precios negativos", () => {
+    it("No hay precios negativos", () => {
+        expect(calcularTotal(20, -20, 'NV')).toEqual(0);
+    });
+});
+
+describe("No debe estados fuera de la lista aceptada", () => {
+    it("EL estado de Nueva York(NY) no esta en la lista", () => {
+        expect(verificarEstado('NY')).toEqual(false);
+    });
+    it("Texas deberia esta en la lista", () => {
+        expect(verificarEstado('TX')).toEqual(true);
     });
 });
